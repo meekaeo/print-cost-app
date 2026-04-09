@@ -112,7 +112,7 @@ export default function DashboardPage() {
           <div className="chart-header">
             <h2 id="chartTitle">รวมค่าใช้จ่ายต่อ Ref.Project</h2>
             <div className="chart-view-toggle">
-              <button className="view-btn active" id="vbtn-bar" onClick={()=>window._setChartView&&window._setChartView("bar")}>แท่งแนวนอน</button>
+              <button className="view-btn active" id="vbtn-bar" onClick={()=>window._setChartView&&window._setChartView("bar")}>แท่งตั้ง</button>
               <button className="view-btn" id="vbtn-line" onClick={()=>window._setChartView&&window._setChartView("line")}>แนวโน้มรายเดือน</button>
             </div>
           </div>
@@ -192,7 +192,7 @@ function initDashboard() {
     const isMobile=window.innerWidth<=768;
 
     if(chartView==="bar") {
-      // Horizontal bar chart - รวมต่อ Ref.Project เรียงจากมากไปน้อย
+      // Vertical bar chart - รวมต่อ Ref.Project เรียงจากมากไปน้อย สีเข้มตามความสูง
       const pd={};
       filtered.forEach(r=>{
         const proj=r["Ref.Project"]||"(ไม่ระบุ)";
@@ -202,12 +202,10 @@ function initDashboard() {
       const projData=Object.entries(pd).map(([proj,val])=>({proj,val})).sort((a,b)=>b.val-a.val);
       const labels=projData.map(d=>d.proj);
       const data=projData.map(d=>d.val);
-      const bgColors=projData.map((_,i)=>{const hue=(i*137.5)%360;return `hsla(${hue},70%,60%,0.85)`;});
-      const borderColors=projData.map((_,i)=>{const hue=(i*137.5)%360;return `hsla(${hue},70%,45%,1)`;});
+      const maxVal=Math.max(...data,1);
+      const bgColors=data.map(v=>{const r=v/maxVal;if(r>=0.85)return "#1d4ed8";if(r>=0.65)return "#3b82f6";if(r>=0.45)return "#60a5fa";if(r>=0.25)return "#93c5fd";return "#bfdbfe";});
 
-      // ปรับความสูง canvas ตามจำนวน project
-      const barH=32;const minH=300;
-      canvas.parentElement.style.height=Math.max(minH,labels.length*barH+80)+"px";
+      canvas.parentElement.style.height="";
 
       if(chart)chart.destroy();
       chart=new window.Chart(canvas,{
@@ -216,29 +214,26 @@ function initDashboard() {
           label:METRIC_LABELS[metric]||metric,
           data,
           backgroundColor:bgColors,
-          borderColor:borderColors,
-          borderWidth:2,
           borderRadius:5,
+          borderSkipped:false,
         }]},
         options:{
-          indexAxis:"y",
           responsive:true,
           maintainAspectRatio:false,
           plugins:{
             legend:{display:false},
-            tooltip:{callbacks:{label:ctx=>`${ctx.label}: `+(isPage()?fmtNum(ctx.parsed.x)+" หน้า":fmt(ctx.parsed.x)+" บาท")}}
+            tooltip:{callbacks:{label:ctx=>`${ctx.label}: `+(isPage()?fmtNum(ctx.parsed.y)+" หน้า":fmt(ctx.parsed.y)+" บาท")}}
           },
           scales:{
             x:{
+              grid:{display:false},
+              ticks:{font:{family:"'IBM Plex Sans Thai'",size:11},color:"#1e293b",maxRotation:45,autoSkip:false}
+            },
+            y:{
               beginAtZero:true,
               grid:{color:"#f1f5f9"},
               ticks:{font:{family:"'IBM Plex Mono'",size:11},color:"#1e293b",callback:v=>v>=1000&&!isPage()?(v/1000)+"k":isPage()?fmtNum(v):fmt(v)},
               title:{display:true,text:METRIC_LABELS[metric]||metric,color:"#1e293b",font:{family:"'IBM Plex Sans Thai'",size:12,weight:"600"}}
-            },
-            y:{
-              grid:{display:false},
-              ticks:{font:{family:"'IBM Plex Sans Thai'",size:11},color:"#1e293b"},
-              title:{display:true,text:"Ref.Project",color:"#1e293b",font:{family:"'IBM Plex Sans Thai'",size:12,weight:"600"}}
             }
           }
         }
