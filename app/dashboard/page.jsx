@@ -222,18 +222,18 @@ function initDashboard() {
           maintainAspectRatio:false,
           plugins:{
             legend:{display:false},
-            tooltip:{callbacks:{label:ctx=>`${ctx.label}: `+(isPage()?fmtNum(ctx.parsed.y)+" หน้า":fmt(ctx.parsed.y)+" บาท")}}
+            tooltip:{titleFont:{size:14},bodyFont:{size:14},callbacks:{label:ctx=>`${ctx.label}: `+(isPage()?fmtNum(ctx.parsed.y)+" หน้า":fmt(ctx.parsed.y)+" บาท")}}
           },
           scales:{
             x:{
               grid:{display:false},
-              ticks:{font:{family:"'IBM Plex Sans Thai'",size:11},color:"#1e293b",maxRotation:45,autoSkip:false}
+              ticks:{font:{family:"'IBM Plex Sans Thai'",size:14,weight:"600"},color:"#1e293b",maxRotation:45,autoSkip:false}
             },
             y:{
               beginAtZero:true,
               grid:{color:"#f1f5f9"},
-              ticks:{font:{family:"'IBM Plex Mono'",size:11},color:"#1e293b",callback:v=>v>=1000&&!isPage()?(v/1000)+"k":isPage()?fmtNum(v):fmt(v)},
-              title:{display:true,text:METRIC_LABELS[metric]||metric,color:"#1e293b",font:{family:"'IBM Plex Sans Thai'",size:12,weight:"600"}}
+              ticks:{font:{family:"'IBM Plex Mono'",size:14,weight:"600"},color:"#1e293b",callback:v=>v>=1000&&!isPage()?(v/1000)+"k":isPage()?fmtNum(v):fmt(v)},
+              title:{display:true,text:METRIC_LABELS[metric]||metric,color:"#1e293b",font:{family:"'IBM Plex Sans Thai'",size:14,weight:"600"}}
             }
           }
         }
