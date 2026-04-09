@@ -227,13 +227,13 @@ function initDashboard() {
           scales:{
             x:{
               grid:{display:false},
-              ticks:{font:{family:"'IBM Plex Sans Thai'",size:14,weight:"600"},color:"#1e293b",maxRotation:45,autoSkip:false}
+              ticks:{font:{family:"Arial,sans-serif",size:14,weight:"bold"},color:"#1e293b",maxRotation:45,autoSkip:false}
             },
             y:{
               beginAtZero:true,
               grid:{color:"#f1f5f9"},
-              ticks:{font:{family:"'IBM Plex Mono'",size:14,weight:"600"},color:"#1e293b",callback:v=>v>=1000&&!isPage()?(v/1000)+"k":isPage()?fmtNum(v):fmt(v)},
-              title:{display:true,text:METRIC_LABELS[metric]||metric,color:"#1e293b",font:{family:"'IBM Plex Sans Thai'",size:14,weight:"600"}}
+              ticks:{font:{family:"Arial,sans-serif",size:14,weight:"bold"},color:"#1e293b",callback:v=>v>=1000&&!isPage()?(v/1000)+"k":isPage()?fmtNum(v):fmt(v)},
+              title:{display:true,text:METRIC_LABELS[metric]||metric,color:"#1e293b",font:{family:"Arial,sans-serif",size:14,weight:"bold"}}
             }
           }
         }
@@ -251,7 +251,7 @@ function initDashboard() {
       const projNames=Object.keys(pd).sort();
       const datasets=projNames.map((proj,i)=>({label:proj,data:monthKeys.map(mk=>pd[proj][mk]||0),borderColor:COLORS[i%COLORS.length],backgroundColor:COLORS[i%COLORS.length],borderWidth:2,pointRadius:4,tension:0.4,fill:false}));
       if(chart)chart.destroy();
-      chart=new window.Chart(canvas,{type:"line",data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:true,position:isMobile?"bottom":"left",labels:{usePointStyle:true,boxWidth:10,font:{family:"'IBM Plex Sans Thai'",size:12},color:"#1e293b"}},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: `+(isPage()?fmtNum(ctx.parsed.y)+" หน้า":fmt(ctx.parsed.y)+" บาท")}}},scales:{x:{grid:{color:"#f1f5f9"},ticks:{font:{family:"'IBM Plex Sans Thai'",size:12},color:"#1e293b",maxRotation:isMobile?45:0}},y:{beginAtZero:true,position:"right",grid:{color:"#f1f5f9"},title:{display:!isMobile,text:METRIC_LABELS[metric]||metric,color:"#1e293b",font:{family:"'IBM Plex Sans Thai'",size:12,weight:"600"}},ticks:{font:{family:"'IBM Plex Mono'",size:12},color:"#1e293b",callback:v=>v>=1000&&!isPage()?(v/1000)+"k":isPage()?fmtNum(v):fmt(v)}}}}});
+      chart=new window.Chart(canvas,{type:"line",data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},plugins:{legend:{display:true,position:isMobile?"bottom":"left",labels:{usePointStyle:true,boxWidth:10,font:{family:"Arial,sans-serif",size:13},color:"#1e293b"}},tooltip:{titleFont:{size:14},bodyFont:{size:14},callbacks:{label:ctx=>` ${ctx.dataset.label}: `+(isPage()?fmtNum(ctx.parsed.y)+" หน้า":fmt(ctx.parsed.y)+" บาท")}}},scales:{x:{grid:{color:"#f1f5f9"},ticks:{font:{family:"Arial,sans-serif",size:13,weight:"bold"},color:"#1e293b",maxRotation:isMobile?45:0}},y:{beginAtZero:true,position:"right",grid:{color:"#f1f5f9"},title:{display:!isMobile,text:METRIC_LABELS[metric]||metric,color:"#1e293b",font:{family:"Arial,sans-serif",size:13,weight:"bold"}},ticks:{font:{family:"Arial,sans-serif",size:13,weight:"bold"},color:"#1e293b",callback:v=>v>=1000&&!isPage()?(v/1000)+"k":isPage()?fmtNum(v):fmt(v)}}}}});
       set("chartTitle","แนวโน้มค่าใช้จ่ายรายเดือน — แยกตาม Ref.Project");
     }
   }
